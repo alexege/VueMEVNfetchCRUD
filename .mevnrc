@@ -1,0 +1,8 @@
+{
+  "name": "ark-dino-claimer-app",
+  "template": "Default",
+  "isConfigured": {
+    "client": true,
+    "server": true
+  }
+}
