@@ -2,10 +2,8 @@
   <div class="home">
     <Dashboard/>
 
-    {{ user }}
-
     <div class="wrapper">
-      <table style="border: 2px solid black;">
+      <table style="border: 2px solid black;" id="dinoClaim">
         <tr>
           <th>Index</th>
           <th>Name</th>
@@ -15,7 +13,7 @@
         <tr v-for="(user, index) in users" :key="user.id" :id="'row' + user._id">
           <td>{{index + 1}}</td>
           <td>
-            <span>{{user.name}}</span>
+            <span :id="`name_${user._id}`" @click="edit_name(user._id)" @keydown="submitIfEnter" @blur="edit_name_leave(user._id)" contenteditable="true">{{user.name}}</span>
           </td>
           <td>{{user.age}}</td>
           <td><a href="#" @click="editDino(user._id)">Edit</a></td>
@@ -27,17 +25,9 @@
           <td><input type="text" v-model="age" tabindex="2" placeholder="age"></td>
           <td><button @click="addDino" tabindex="3">Add</button></td>
         </tr>
-        <tr id="editForm">
-          <td></td>
-          <td><input type="text" v-model="editUsername" tabindex="4"></td>
-          <td><input type="text" v-model="editAge" tabindex="5"></td>
-          <td><button @click="updateDino(editUserId)" tabindex="6">Update</button></td>
-        </tr>
       </table>
      
-    <p>Connected to mongodb db: userdb > users</p>
-
-
+    <!-- <p>Connected to mongodb db: userdb > users</p> -->
     </div>
   </div>
 </template>
@@ -54,10 +44,10 @@ export default {
   data() {
     return {
       user: null,
+      editUser: null,
       editUserId: null,
-      editUsername: null,
-      editAge: null,
-      result: [],
+      editUsername: "default",
+      editAge: 100,
       users: [],
       username: null,
       age: null,
@@ -65,6 +55,45 @@ export default {
     }
   },
   methods: {
+    submitIfEnter(e){
+      if(e.keyCode == 13){
+        e.preventDefault();
+        e.target.blur();
+      }
+    },
+    edit_name(id){      
+      fetch(`http://localhost:9000/api/${id}`)
+      .then(response => response.json())
+      .then(data => {
+        console.log('Success:', data);
+        this.editUser = data;
+        this.editName = 
+        this.getUsers();
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+    },
+    edit_name_leave(id){
+      const dinoName = document.getElementById(`name_${id}`).innerHTML;
+      const data = {
+        "name": dinoName
+      }
+      fetch(`http://localhost:9000/api/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type":"application/json"
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Success:', data);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+    },
     //Add a new user
     addDino(){
       const data = {
@@ -101,9 +130,6 @@ export default {
     //Edit a person
     editDino(id){
       document.querySelector('#editForm').style.display="inline-block";
-      // let inputform = document.createElement("input");
-      // inputform.name="test";
-      // document.querySelector(`#row${id}`).append(inputform)
       this.editUserId = id;
       console.log("retrieving single person data");
       fetch(`http://localhost:9000/api/${id}`)
@@ -112,17 +138,12 @@ export default {
         console.log('Success:', data);
         this.user = data;
         this.getUsers();
-        this.result = data;
         this.editUsername = data.name;
         this.editAge = data.age;
       })
       .catch((error) => {
         console.error('Error:', error);
       });
-    },
-    selectedDino(id){
-      console.log(id);
-   
     },
     //Update a person
     updateDino(id){
@@ -169,7 +190,6 @@ export default {
       fetch('http://localhost:9000/api/')
       .then(res => res.json())
       .then(data => {
-        console.log('Data:', data)
         this.users = data;
       })
     }
