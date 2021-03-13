@@ -1,7 +1,9 @@
 <template>
   <div id="app">
     <div id="nav">
-      <router-link to="/">DinoClaiming</router-link> |
+      <router-link to="/login">Login</router-link> |
+      <router-link to="/register">Register</router-link> |
+      <router-link to="/claiming">DinoClaiming</router-link> |
       <router-link to="/about">TamingTimers</router-link>
     </div>
     <router-view />
@@ -27,5 +29,12 @@
 
 #nav a.router-link-exact-active {
   color: #42b983;
+}
+
+body {
+  height: 100vh;
+  /* background-image: url('./assets/background.png'); */
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
 }
 </style>

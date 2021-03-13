@@ -209,6 +209,10 @@ table tr {
   text-align: center;
   margin: 0 auto;
   width: 960px;
+  padding: 2em;
+
+  background-color: rgba(255, 255, 255, 0.95);
+
 }
 .wrapper table {
   margin: 0 auto;

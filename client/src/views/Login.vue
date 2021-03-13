@@ -1,12 +1,11 @@
 <template>
-    <div class="dashboard">
-        <h2>Dashboard</h2>
+    <div>
+        <h2>Login</h2>
     </div>
 </template>
 <script>
-
 export default {
-    name: 'Dashboard',
+    name: 'Login',
     components: {},
     data() {
         return {
@@ -14,7 +13,7 @@ export default {
         }
     },
     methods: {
-
+        
     }
 }
 </script>
