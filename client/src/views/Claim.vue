@@ -17,7 +17,7 @@
           <th>Amount</th>
           <th colspan='2'>Action</th>
         </tr>
-        <tr v-for="(dino, index) in dinos" :key="dino.id" :id="'row' + dino._id">
+        <tr v-for="(dino, index) in dinos" :key="dino.id" :id="'row' + dino._id" :class="{}">
           <td>{{index + 1}}</td>
           <td>
             <img v-if="dino.name" :src="require(`../assets/dinosaurs/${dino.name}.png`)" :alt="dino" width="75px" height="50px">
@@ -32,7 +32,8 @@
           </td>
           <!-- <td>{{ dino.amount }}</td> -->
           <!-- <td><a href="#" @click="editDino(dino._id)">Edit</a></td> -->
-          <td><a href="#" @click="deleteDino(dino._id)" style="text-decoration: none;"><span style="color: red;">x</span></a></td>
+          <!-- <td><a href="#" @click="deleteDino(dino._id, dino.name)" style="text-decoration: none;"><span style="color: red;">x</span></a></td> -->
+          <td><a href="#" @click="doDelete(dino._id, dino.name)" style="text-decoration: none;"><span style="color: red;">x</span></a></td>
         </tr>
         <tr>
           <td>
@@ -52,6 +53,10 @@
         </tr>
       </table>
 
+      <h1>Delete Page</h1>
+      <button class="delete-btn" @click="doDelete">Delete Page</button>
+      <confirm-dialogue ref="confirmDialogue"></confirm-dialogue>
+
     </div>
   </div>
 </template>
@@ -59,11 +64,13 @@
 <script>
 // @ is an alias to /src
 import Dashboard from "@/components/Dashboard.vue";
+import ConfirmDialogue from "../components/ConfirmDialog.vue";
 
 export default {
   name: "home",
   components: {
-    Dashboard
+    Dashboard,
+    ConfirmDialogue
   },
   data() {
     return {
@@ -84,10 +91,24 @@ export default {
         amount: 1
       },
       dinos: [],
-      errors: null
+      errors: null,
     }
   },
   methods: {
+    async doDelete(dinoID, dinoName) {
+            const ok = await this.$refs.confirmDialogue.show({
+                title: 'Delete Dinosaur',
+                message: `Are you sure you want to delete ${dinoName}?`,
+                okButton: 'Delete',
+            })
+            // If you throw an error, the method will terminate here unless you surround it wil try/catch
+            if (ok) {
+                // alert('You have successfully delete this page.')
+                this.deleteDino(dinoID);
+            } else {
+                // alert('You chose not to delete this page. Doing nothing now.')
+            }
+    },
     checkInputs(e) {
       this.errors = [];
 
@@ -228,11 +249,8 @@ export default {
         console.log("Dino data:", data);
       })
     },
-
     //Delete a person
     deleteDino(id){
-
-      if(confirm(`Are you sure you want to delete this dinosaur?`)){
         fetch(`http://localhost:9000/api/claim/delete/${id}`, {
           method: 'DELETE'
         })
@@ -244,9 +262,6 @@ export default {
         .catch((error) => {
           console.error('Error:', error);
         });
-      } else {
-        // Do nothing
-      }
     },
     getDinos() {
       console.log("Getting Dino information");
@@ -301,6 +316,25 @@ table tr {
 
 .errors li {
   color: red;
+}
+
+
+
+
+
+
+
+
+.delete-btn {
+    padding: 0.5em 1em;
+    background-color: #eccfc9;
+    color: #c5391a;
+    border: 2px solid #ea3f1b;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 16px;
+    text-transform: uppercase;
+    cursor: pointer;
 }
 
 </style>
