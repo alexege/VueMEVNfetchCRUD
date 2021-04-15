@@ -6,8 +6,9 @@ const dinoSchema = new Schema(
       type: String,
       required: [true, 'name field is required'],
     },
-    owner: {
-      type: String
+    breeder: {
+      type: String,
+      default: "Admin"
     },
     amount: {
       type: Number,
@@ -17,4 +18,4 @@ const dinoSchema = new Schema(
   { timestamps: true },
 );
 
-module.exports = model('users', userSchema);
+module.exports = model('dinos', dinoSchema);

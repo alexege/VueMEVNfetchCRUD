@@ -1,17 +1,33 @@
 const { Schema, model } = require('mongoose');
 
+// const userSchema = new Schema(
+//   {
+//     name: {
+//       type: String,
+//       required: [true, 'name field is required'],
+//     },
+//     age: {
+//       type: Number,
+//       required: [true, 'age field is required'],
+//     },
+//   },
+//   { timestamps: true },
+// );
+
 const userSchema = new Schema(
   {
-    name: {
+    username: {
       type: String,
-      required: [true, 'name field is required'],
+      required: [true, 'username field is required'],
+      unique: true
     },
-    age: {
-      type: Number,
-      required: [true, 'age field is required'],
+    password: {
+      type: String,
+      required: [true, 'password field is required'],
     },
   },
   { timestamps: true },
 );
+
 
 module.exports = model('users', userSchema);

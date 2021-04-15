@@ -1,6 +1,75 @@
 'use strict';
 
 const User = require('../models/user_schema');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const JWT_SECRET = 'asdflkjasdflkjasdflkj';
+
+const registerUser = async (req, res) => {
+  // const username = "Alexander";
+  // const plainTextPassword = "password";
+  const { username, password: plainTextPassword } = req.body;
+  
+  //Check validity of username
+  if(!username || typeof username !== 'string') {
+    return res.json({ status: 'error', error: 'Invalid username'})
+  }
+
+  //Check validity of password
+  if(!plainTextPassword || typeof plainTextPassword !== 'string') {
+    return res.json({ status: 'error', error: 'Invalid password'})
+  }
+
+  if(plainTextPassword.length < 2){
+    return res.json({
+      status: 'error',
+      error: 'Password is too small. Please enter a password of 5 or more characters'
+    })
+  }
+
+  const password = await bcrypt.hash(plainTextPassword, 10);
+
+  try {
+    const response = await User.create({
+      username, 
+      password
+    })
+    console.log('User created successfully', response);
+  } catch (error) {
+    if(error.code === 11000){
+      //Duplicate key
+      return res.json({status: 'error', error:  'Username already in use'})
+    }
+    throw error
+  }
+}
+
+const loginUser = async (req, res) => {
+  const { username, password } = req.body;
+  const user = await User.findOne({ username }).lean()
+  
+  if(!user) {
+    return res.json({ status: 'error', error: 'Invalid username/password'})
+  }
+
+  if(await bcrypt.compare(password, user.password, function(err, resp){
+    if(err) {
+      throw new Error(err)
+    }
+    if(resp) {
+      //The username and password combo was successful.
+      const token = jwt.sign(
+      { 
+        id: user._id, 
+        username: user.username 
+      }, JWT_SECRET)
+      return res.json({ status: 'ok', data: token })
+
+    } else {
+      return res.json({ status: 'error', error: 'Invalid username/password'})
+    }
+  }));
+}
 
 const createData = (req, res) => {
   User.create(req.body)
@@ -80,6 +149,8 @@ const deleteData = (req, res) => {
 };
 
 module.exports = {
+  loginUser,
+  registerUser,
   createData,
   readOneData,
   readData,
