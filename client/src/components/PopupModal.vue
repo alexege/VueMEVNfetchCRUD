@@ -1,6 +1,6 @@
 <template>
     <transition name="fade">
-        <div class="popup-modal" v-if="isVisible">
+        <div class="popup-modal" v-if="isVisible" @click="close">
             <div class="window">
                 <slot></slot>
             </div>

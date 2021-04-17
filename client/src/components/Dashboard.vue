@@ -17,12 +17,30 @@ export default {
         }
     },
     methods: {
-
+        // getLoggedInUser() {
+        //     fetch('http://localhost:9000/api/login', {
+        //         method: 'POST',
+        //         headers: {
+        //             'Content-Type': 'application/json'
+        //         },
+        //         // body: JSON.stringify(data)
+        //         body: JSON.stringify(data)
+        //     }).then((res) => res.json())
+        //     .then((data) => {
+        //         console.log("Login Data: ", data);
+        //         if(data.status == 'ok'){
+        //             console.log("Respons was ok");
+        //             window.location = "/claim";
+        //         } else {
+        //             console.log("Response was not ok");
+        //             this.errors = [];
+        //             this.errors.push("Incorrect username or password");
+        //         }
+        //     })
+        // }
     },
     mounted() {
-        // getLoggedInUser() {
-        //     // fetch("http://localhost:9000/")
-        // }
+        // this.getLoggedInUser();
     }
 }
 </script>

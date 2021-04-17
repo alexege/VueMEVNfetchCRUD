@@ -2,6 +2,8 @@ const express = require('express');
 
 const {
   loginUser,
+  getLoggedInUser,
+  logout,
   registerUser,
   createData,
   readOneData,
@@ -30,6 +32,8 @@ router
   .delete('/claim/delete/:id', deleteDino)
   .post('/register', registerUser)
   .post('/login', loginUser)
+  .get('/user', getLoggedInUser)
+  .post('/logout', logout)
   .post('/', createData)
   .get('/:id', readOneData)
   .get('/', readData)

@@ -4,6 +4,12 @@
 
     <div class="wrapper">
 
+    <div style="display: flex; flex-wrap: wrap;">
+      <a href="" v-for="dinosaur in dinosaurList" :key="dinosaur._id" style="display: flex; flex-flow: row wrap; border: 2px solid black; align-items: center; justify-content: center; border-radius: 5px; height: 150px; width: 150px;">
+        <img :src="require(`../assets/dinosaurs/${dinosaur}.png`)" alt="" style="max-width: 100px; max-height: 100px;">
+      </a>
+    </div>
+
       <ul class="errors">
         <li v-for="error in errors" :key="error">{{ error }}</li>
       </ul>
@@ -28,7 +34,7 @@
           </td>
           <td>{{ dino.breeder }}</td>
           <td>
-            <input type="number" :id="`amount_${dino._id}`" @click="edit_dino_amount(dino._id)" @keydown="submitIfEnter" @blur="edit_dino_amount_leave(dino._id)" contenteditable="true" :value="dino.amount" style="width:40px"/>
+            <input type="number" :id="`amount_${dino._id}`" @click="edit_dino_amount(dino._id)" @keydown="submitIfEnter" @blur="edit_dino_amount_leave(dino._id)" contenteditable="true" min="1" :value="dino.amount" style="width:40px"/>
           </td>
           <!-- <td>{{ dino.amount }}</td> -->
           <!-- <td><a href="#" @click="editDino(dino._id)">Edit</a></td> -->
@@ -53,8 +59,6 @@
         </tr>
       </table>
 
-      <h1>Delete Page</h1>
-      <button class="delete-btn" @click="doDelete">Delete Page</button>
       <confirm-dialogue ref="confirmDialogue"></confirm-dialogue>
 
     </div>
@@ -74,7 +78,7 @@ export default {
   },
   data() {
     return {
-      dinosaurList: ["achatina","allosaurus","ammonite","angler","ankylosaurus","araneo","archaeopteryx","argentavis","arthropluera","astrocetus","baryonyx","basilisk","basilosaurus","bloodstalker","brontosaurus","carbonemys","carnotaurus","castoroides","chalicotherium","cnidaria","coelacanth","crystalwyvern","daeodon","deathworm","dilophosaur","diplocaulus","direbear","featherlight","gacha","gallimimus","gasbags","giantbee","giganotosaurus","gigantopithecus","glowtail","hyaenodon","ichthyosaurus","iguanodon","jerboa","kairuku","kaprosuchus","karkinos","kentrosaurus","lamprey","ymantria","lystrosaurus","magmasaur","mammoth","managarmr","manta","mantis","megachelon","megalania","megaloceros","megalodon","megalosaurus","meganeura","megapithecus","megatherium","microraptor","morellatops","mosasaurus","oviraptor","pachy","pachyrhinosaurus","paraceratherium","parasaur","pegomastax","pelagornis","phiomia","piranha","plesiosaur","pteranodon","purlovia","quetzal","raptor","ravager","reaper","rockdrake","rockelemental","rollrat","sabertooth","sarco","spinosaurus","stegosaurus","tapejara","therizinosaurus","thornydragon","thylacoleo","titanoboa","titanomyrma","triceratops","tropeognathus","velonasaur","yutyrannus"],
+      dinosaurList: ["achatina","allosaurus","ammonite","angler","ankylosaurus","araneo","archaeopteryx","argentavis","arthropluera","astrocetus","baryonyx","basilisk","basilosaurus","bloodstalker","brontosaurus","carbonemys","carnotaurus","castoroides","chalicotherium","cnidaria","coelacanth","crystalwyvern","daeodon","dilophosaur","diplocaulus","direbear","featherlight","gacha","gallimimus","gasbags","giantbee","giganotosaurus","gigantopithecus","glowtail","hyaenodon","ichthyosaurus","iguanodon","jerboa","kairuku","kaprosuchus","karkinos","kentrosaurus","lamprey","lystrosaurus","magmasaur","mammoth","managarmr","manta","mantis","megachelon","megalania","megaloceros","megalodon","megalosaurus","meganeura","megapithecus","megatherium","microraptor","morellatops","mosasaurus","oviraptor","pachy","pachyrhinosaurus","parasaur","pegomastax","pelagornis","phiomia","piranha","plesiosaur","pteranodon","purlovia","quetzal","raptor","ravager","reaper","rockdrake","rockelemental","rollrat","sabertooth","sarco","stegosaurus","tapejara","therizinosaurus","thornydragon","thylacoleo","titanoboa","titanomyrma","triceratops","tropeognathus","velonasaur","yutyrannus"],
       selectedDino: "achatina",
       user: null,
       editUser: null,
@@ -134,10 +138,6 @@ export default {
       .then(res => res.json())
       .then(data => {
         console.log('Success:', data);
-
-        // this.editUser = data;
-        // this.editName = 
-        // this.getDinos();
       })
       .catch((error) => {
         console.error('Error:', error);

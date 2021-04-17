@@ -23,7 +23,7 @@ const registerUser = async (req, res) => {
   if(plainTextPassword.length < 2){
     return res.json({
       status: 'error',
-      error: 'Password is too small. Please enter a password of 5 or more characters'
+      error: 'Password is too small. Please enter a password of 2 or more characters'
     })
   }
 
@@ -63,12 +63,49 @@ const loginUser = async (req, res) => {
         id: user._id, 
         username: user.username 
       }, JWT_SECRET)
+
+      res.cookie('jwt', token, {
+        httpOnly: true,
+        maxAge: 24 * 60 * 60 * 1000 // 1 day
+      })
+
       return res.json({ status: 'ok', data: token })
 
     } else {
       return res.json({ status: 'error', error: 'Invalid username/password'})
     }
   }));
+}
+
+const getLoggedInUser = async (req, res) => {
+  try {
+    const cookie = req.cookies['jwt'];
+    const claims = jwt.verify(cookie, JWT_SECRET)
+  
+    if(!claims) {
+      return res.status(401).send({
+        message: 'unauthenticated'
+      })
+    }
+  
+    const user = await User.findOne({ _id: claims._id})
+  
+    const {password, ...data} = await user.toJSON();
+  
+    res.send(data);
+  }
+  catch (e) {
+    return res.status(401).send({
+      message: 'unauthenticated'
+    })
+  }
+}
+
+const logout = (req, res) => {
+  res.cookie('jwt', '', { maxAge: 0})
+  res.send({
+    message: 'Successful logout'
+  })
 }
 
 const createData = (req, res) => {
@@ -150,6 +187,8 @@ const deleteData = (req, res) => {
 
 module.exports = {
   loginUser,
+  getLoggedInUser,
+  logout,
   registerUser,
   createData,
   readOneData,
