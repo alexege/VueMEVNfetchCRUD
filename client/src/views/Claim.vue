@@ -4,11 +4,12 @@
 
     <div class="wrapper">
 
-    <div style="display: flex; flex-wrap: wrap;">
-      <a href="" v-for="dinosaur in dinosaurList" :key="dinosaur._id" style="display: flex; flex-flow: row wrap; border: 2px solid black; align-items: center; justify-content: center; border-radius: 5px; height: 150px; width: 150px;">
-        <img :src="require(`../assets/dinosaurs/${dinosaur}.png`)" alt="" style="max-width: 100px; max-height: 100px;">
+    <!-- <div class="dinosaurListItem">
+      <a :href="`/claim/${dinosaur}`" class="dinoListLink" v-for="dinosaur in dinosaurList" :key="dinosaur._id">
+        <img :src="require(`../assets/dinosaurs/${dinosaur}.png`)" alt="dinosaur" class="dinoListImage">
+        <label for="" style="width: 100%; ">{{ dinosaur }}</label>
       </a>
-    </div>
+    </div> -->
 
       <ul class="errors">
         <li v-for="error in errors" :key="error">{{ error }}</li>
@@ -303,7 +304,8 @@ table tr {
   width: 960px;
   padding: 2em;
 
-  background-color: rgba(255, 255, 255, 0.95);
+  /* background-color: rgba(255, 255, 255, 0.95); */
+  /* background-color: rgba(44, 47, 51, 1.0); */
 
 }
 .wrapper table {
@@ -318,12 +320,36 @@ table tr {
   color: red;
 }
 
+.dinosaurListItem {
+  display: flex;
+  flex-wrap: wrap;
+  transition: all .2s ease-in-out;
+}
 
+.dinosaurListItem :hover {
+  transform: scale(1.2);
+  background-color: black;
+  color: white;
+}
 
+.dinoListLink {
+  display: flex; 
+  flex-flow: row wrap; 
+  border: 2px solid black; 
+  align-items: center; 
+  justify-content: center; 
+  border-radius: 5px; 
+  height: 150px; 
+  width: 150px; 
+  text-decoration: none; 
+  color: black; 
+  font-weight: 600;
+}
 
-
-
-
+.dinoListImage {
+  max-width: 100px; 
+  max-height: 100px;
+}
 
 .delete-btn {
     padding: 0.5em 1em;

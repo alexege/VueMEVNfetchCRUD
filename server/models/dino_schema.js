@@ -6,14 +6,18 @@ const dinoSchema = new Schema(
       type: String,
       required: [true, 'name field is required'],
     },
-    breeder: {
-      type: String,
-      default: "Admin"
-    },
     amount: {
       type: Number,
       required: [true, 'amount field is required'],
     },
+    breeder: {
+      type: String,
+      default: "Admin"
+    },
+    users: [{
+      type: Schema.Types.ObjectId,
+      ref: "users"
+    }]
   },
   { timestamps: true },
 );

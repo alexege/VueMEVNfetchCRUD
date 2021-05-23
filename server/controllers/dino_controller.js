@@ -34,6 +34,18 @@ const getDino = (req, res) => {
     });
 };
 
+const getRequests = (req, res) => {
+  console.log("dino is: ", req.params.name);
+  Dino.findOne({ name: req.params.name})
+    .then((data) => {
+      res.status(200).json(data);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).json(err);
+    });
+};
+
 const getAllDinos = (req, res) => {
   Dino.find()
     .then((data) => {
@@ -109,6 +121,7 @@ module.exports = {
     editDinoAmount,
     updateDinoAmount,
     getDino,
+    getRequests,
     getAllDinos
 //   loginUser,
 //   registerUser,

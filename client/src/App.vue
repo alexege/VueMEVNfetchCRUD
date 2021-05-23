@@ -1,8 +1,9 @@
 <template>
   <div id="app">
     <div id="nav">
-      <router-link to="/login">Login</router-link> |
       <router-link to="/register">Register</router-link> |
+      <router-link to="/login">Login</router-link> |
+      <router-link to="/selection">Selection</router-link> |
       <router-link to="/claim">DinoClaiming</router-link> |
       <router-link to="/taming">TamingTimers</router-link>
     </div>
@@ -34,6 +35,7 @@
 body {
   height: 100vh;
   /* background-image: url('./assets/background.png'); */
+  /* background-color: #7289da; */
   background-repeat: no-repeat;
   background-size: 100% 100%;
 }

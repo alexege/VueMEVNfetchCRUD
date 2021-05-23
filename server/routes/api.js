@@ -14,6 +14,7 @@ const {
 
 const {
   getDino,
+  getRequests,
   getAllDinos,
   editDinoAmount,
   updateDinoAmount,
@@ -24,20 +25,22 @@ const {
 const router = express.Router();
 
 router
-  .get('/claim/getOne/:id', getDino)
-  .get('/claim/getAll', getAllDinos)
-  .post('/claim/add', createDino)
-  .get('/claim/edit/:id', editDinoAmount)
-  .put('/claim/update/:id', updateDinoAmount)
-  .delete('/claim/delete/:id', deleteDino)
-  .post('/register', registerUser)
-  .post('/login', loginUser)
-  .get('/user', getLoggedInUser)
-  .post('/logout', logout)
-  .post('/', createData)
-  .get('/:id', readOneData)
-  .get('/', readData)
-  .put('/:id', updateData)
-  .delete('/:id', deleteData);
+  .get('/claim/dino/:name',getRequests)
+  .get('/claim/getOne/:id',getDino)
+  .get('/claim/getAll',getAllDinos)
+  .post('/claim/add',createDino)
+  .get('/claim/edit/:id',editDinoAmount)
+  .put('/claim/update/:id',updateDinoAmount)
+  .delete('/claim/delete/:id',deleteDino)
+  .post('/register',registerUser)
+  .post('/login',loginUser)
+  .get('/user',getLoggedInUser)
+  .post('/logout',logout)
+  .post('/',createData)
+  .get('/:id',readOneData)
+  .get('/',readData)
+  .get('/dinos/all', getAllDinos)
+  .put('/:id',updateData)
+  .delete('/:id',deleteData);
 
 module.exports = router;

@@ -3,6 +3,7 @@
 const User = require('../models/user_schema');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const dino_schema = require('../models/dino_schema');
 const JWT_SECRET = 'asdflkjasdflkjasdflkj';
 
 const registerUser = async (req, res) => {

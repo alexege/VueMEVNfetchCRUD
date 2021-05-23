@@ -5,6 +5,8 @@ import Login from "./views/Login.vue";
 import Claim from "./views/Claim.vue";
 import Register from "./views/Register.vue";
 import Taming from "./views/Taming.vue";
+import Selection from "./views/SelectionMenu.vue";
+// import DinoData from "./views/DinoData.vue";
 
 Vue.use(Router);
 
@@ -21,6 +23,16 @@ export default new Router({
       path: "/claim",
       name: "claim",
       component: Claim
+    },
+    // {
+    //   path: "/claim/dino/:name",
+    //   name: "requests",
+    //   component: DinoData
+    // },
+    {
+      path: "/selection",
+      name: "selection",
+      component: Selection
     },
     {
       path: "/taming",

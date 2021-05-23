@@ -1,19 +1,5 @@
 const { Schema, model } = require('mongoose');
 
-// const userSchema = new Schema(
-//   {
-//     name: {
-//       type: String,
-//       required: [true, 'name field is required'],
-//     },
-//     age: {
-//       type: Number,
-//       required: [true, 'age field is required'],
-//     },
-//   },
-//   { timestamps: true },
-// );
-
 const userSchema = new Schema(
   {
     username: {
@@ -25,6 +11,14 @@ const userSchema = new Schema(
       type: String,
       required: [true, 'password field is required'],
     },
+    role: {
+      type: String,
+      default: 'user'
+    },
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: "Dino"
+    }
   },
   { timestamps: true },
 );

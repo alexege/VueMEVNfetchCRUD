@@ -4,32 +4,35 @@
 
         <table style="margin: 0 auto; text-align: center; border: 1px solid black;">
             <tr>
-                <th>Username</th>
-                <th>Password</th>
+                <th>Registered Users</th>
+                <!-- <th>Password</th> -->
             </tr>
             <tr v-for="user in users" :key="user._id">
                 <td>{{ user.username }}</td>
-                <td>{{ user.password }}</td>
+                <!-- <td>{{ user.password }}</td> -->
             </tr>
         </table>
         <form id="registrationForm">
-            <input type="text" id="username" placeholder="username" v-model="username">
-            <input type="password" id="password" placeholder="password" v-model="password">
+            <input type="text" id="username" placeholder="username" v-model="username"> <br/>
+            <input type="password" id="password" placeholder="password" v-model="password"> <br/>
             <input type="submit" @click="submitForm" value="Submit">
         </form>
 
-        <p v-for="user in users" :key="user._id">{{ user.username }} | {{ user.createdAt }}</p>
+        <!-- Users: <p v-for="user in users" :key="user._id">{{ user }}</p>
+        <br>
+        Dinos: <p v-for="dino in dinos" :key="dino._id">{{ dino.name }} | {{ dino.breeder }} | {{ dino.users}}</p> -->
+
     </div>
 </template>
 <script>
 export default {
     name: 'Register',
-    components: {},
     data() {
         return {
             username: null,
             password: null,
-            users: null
+            users: null,
+            dinos: null
         }
     },
     methods: {
@@ -65,10 +68,24 @@ export default {
                 this.users = data;
                 console.log("data: ", data);
             })
+        },
+        getAllDinos(){
+            fetch("http://localhost:9000/api/dinos/all")
+            .then(res => res.json())
+            .then((data) => {
+                this.dinos = data;
+                console.log("Dino data: ", data);
+            })
         }
     },
     mounted() {
         this.getUsers();
+        this.getAllDinos();
     }
 }
 </script>
+<style>
+.registrationForm {
+    padding: 10px;
+}
+</style>
