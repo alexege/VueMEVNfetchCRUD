@@ -1,8 +1,12 @@
   <template>
   <div class="home">
-    <Dashboard/>
+    <!-- <Dashboard/> -->
 
     <div class="wrapper">
+
+      LoggedInUser: {{ loggedInUser }}
+
+      {{ username }}
 
     <!-- <div class="dinosaurListItem">
       <a :href="`/claim/${dinosaur}`" class="dinoListLink" v-for="dinosaur in dinosaurList" :key="dinosaur._id">
@@ -31,9 +35,15 @@
           </td>
           <td>
             <!-- <span :id="`name_${dino._id}`" @click="edit_dino(dino._id)" @keydown="submitIfEnter" @blur="edit_dino_leave(dino._id)" contenteditable="true">{{dino.name}}</span> -->
-            <span>{{ dino.name }}</span>
+            <span v-if="dino.name">{{ dino.name }}</span>
           </td>
-          <td>{{ dino.breeder }}</td>
+          <td>
+            <!-- <select name="breeder" id="" v-model="breeder">
+              <option value="Admin">Admin</option>
+              <option value="" v-for="user in users" :key="user._id">{{ user.username }}</option>
+            </select> -->
+            {{ dino.breeder }}
+          </td>
           <td>
             <input type="number" :id="`amount_${dino._id}`" @click="edit_dino_amount(dino._id)" @keydown="submitIfEnter" @blur="edit_dino_amount_leave(dino._id)" contenteditable="true" min="1" :value="dino.amount" style="width:40px"/>
           </td>
@@ -43,6 +53,7 @@
           <td><a href="#" @click="doDelete(dino._id, dino.name)" style="text-decoration: none;"><span style="color: red;">x</span></a></td>
         </tr>
         <tr>
+          <td></td>
           <td>
             <img :src="require(`../assets/dinosaurs/${selectedDino}.png`)" :alt="selectedDino" width="75px" height="50px">
           </td>
@@ -54,7 +65,12 @@
               </option>
             </select>
           </td>
-          <td></td>
+          <td>
+            <select name="breeder" id="" v-model="selectedBreeder">
+              <option value="Admin">Admin</option>
+              <option :value="user.username" v-for="user in users" :key="user._id">{{ user.username }}</option>
+            </select>
+          </td>
           <td><input type="number" v-model="amount" tabindex="2" placeholder="amount" min="1"></td>
           <td><button @click="addDino" tabindex="3">Add</button></td>
         </tr>
@@ -68,15 +84,18 @@
 
 <script>
 // @ is an alias to /src
-import Dashboard from "@/components/Dashboard.vue";
+// import Dashboard from "@/views/Dashboard.vue";
 import ConfirmDialogue from "../components/ConfirmDialog.vue";
 
 export default {
   name: "home",
   components: {
-    Dashboard,
+    // Dashboard,
     ConfirmDialogue
   },
+  props: [
+    'username'
+  ],
   data() {
     return {
       dinosaurList: ["achatina","allosaurus","ammonite","angler","ankylosaurus","araneo","archaeopteryx","argentavis","arthropluera","astrocetus","baryonyx","basilisk","basilosaurus","bloodstalker","brontosaurus","carbonemys","carnotaurus","castoroides","chalicotherium","cnidaria","coelacanth","crystalwyvern","daeodon","dilophosaur","diplocaulus","direbear","featherlight","gacha","gallimimus","gasbags","giantbee","giganotosaurus","gigantopithecus","glowtail","hyaenodon","ichthyosaurus","iguanodon","jerboa","kairuku","kaprosuchus","karkinos","kentrosaurus","lamprey","lystrosaurus","magmasaur","mammoth","managarmr","manta","mantis","megachelon","megalania","megaloceros","megalodon","megalosaurus","meganeura","megapithecus","megatherium","microraptor","morellatops","mosasaurus","oviraptor","pachy","pachyrhinosaurus","parasaur","pegomastax","pelagornis","phiomia","piranha","plesiosaur","pteranodon","purlovia","quetzal","raptor","ravager","reaper","rockdrake","rockelemental","rollrat","sabertooth","sarco","stegosaurus","tapejara","therizinosaurus","thornydragon","thylacoleo","titanoboa","titanomyrma","triceratops","tropeognathus","velonasaur","yutyrannus"],
@@ -89,12 +108,14 @@ export default {
       users: [],
       name: null,
       breeder: "Admin",
+      selectedBreeder: "Admin",
       amount: 1,
       dino: {
         name : "achatina",
         owner: "Admin",
         amount: 1
       },
+      loggedInUser: null,
       dinos: [],
       errors: null,
     }
@@ -106,7 +127,7 @@ export default {
                 message: `Are you sure you want to delete ${dinoName}?`,
                 okButton: 'Delete',
             })
-            // If you throw an error, the method will terminate here unless you surround it wil try/catch
+            // If you throw an error, the method will terminate here unless you surround it with try/catch
             if (ok) {
                 // alert('You have successfully delete this page.')
                 this.deleteDino(dinoID);
@@ -171,7 +192,7 @@ export default {
       this.checkInputs();
       const data= {
         "name":this.selectedDino,
-        "breeder":this.breeder,
+        "breeder":this.selectedBreeder,
         "amount": this.amount
       };
       fetch('http://localhost:9000/api/claim/add', {
@@ -265,7 +286,6 @@ export default {
         });
     },
     getDinos() {
-      console.log("Getting Dino information");
       fetch('http://localhost:9000/api/claim/getAll')
       .then(res => res.json())
       .then(data => {
@@ -275,11 +295,11 @@ export default {
     },
     //Get all users
     getUsers() {
-      console.log("Getting User information");
       fetch('http://localhost:9000/api/')
       .then(res => res.json())
       .then(data => {
         this.users = data;
+        console.log("All Users:", data);
       })
     }
   },
@@ -294,6 +314,11 @@ export default {
 </script>
 
 <style scoped>
+
+div {
+  background-color: #99aab5;
+}
+
 table tr {
   border: 2px solid black;
 }

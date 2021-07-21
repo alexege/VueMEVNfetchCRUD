@@ -34,7 +34,7 @@
 
 <script>
 // @ is an alias to /src
-import Dashboard from "@/components/Dashboard.vue";
+import Dashboard from "@/views/Dashboard.vue";
 
 export default {
   name: "home",
@@ -186,7 +186,6 @@ export default {
     },
     //Get all users
     getUsers() {
-      console.log("Getting User information");
       fetch('http://localhost:9000/api/')
       .then(res => res.json())
       .then(data => {

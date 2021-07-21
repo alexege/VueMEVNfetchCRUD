@@ -6,9 +6,9 @@
             <input type="text" id="username" v-model="username"><br>
             <label for="password">Password:</label>
             <input type="password" id="password" v-model="password"><br>
-            <input type="submit" @click="Login">
+            <input type="submit" @click="Login" value="login">
             <br>
-            <ul class="errors">
+            <ul v-if="errors" class="errors">
                 <li v-for="error in errors" :key="error">{{ error }}</li>
             </ul>
         </form>
@@ -22,23 +22,10 @@ export default {
         return {
             username: null,
             password: null,
-            errors: null
+            errors: []
         }
     },
     methods: {
-        // checkInputs(e) {
-        //     this.errors = [];
-
-        //     if(!this.amount || this.amount == 0){
-        //         this.errors.push("Amount must be more than 0.");
-        //     }
-
-        //     if(!this.errors.length){
-        //         return true;
-        //     }
-
-        //     e.preventDefault();
-        // },
         Login(event) {
             event.preventDefault();
             // console.log("output:" + this.username + " " + this.password);
@@ -52,18 +39,20 @@ export default {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                // body: JSON.stringify(data)
                 body: JSON.stringify(data)
-            }).then((res) => res.json())
-            .then((data) => {
-                console.log("Login Data: ", data);
+            })
+            .then((res) => res.json())
+            .then((data) => {   
+                this.errors = [];             
                 if(data.status == 'ok'){
                     console.log("Respons was ok");
-                    window.location = "/claim";
+                    this.$emit('loggedInUser', this.username);
+                    this.$router.push('/claim');
+                    // window.location = "/claim";
                 } else {
                     console.log("Response was not ok");
-                    this.errors = [];
-                    this.errors.push("Incorrect username or password");
+                    // this.$emit('loggedInUser', this.username);
+                    this.errors.push(data.error);
                 }
             })
         // }
@@ -72,7 +61,6 @@ export default {
             fetch("http://localhost:9000/api/")
             .then(res => res.json())
             .then((data) => {
-                console.log("data: ", data);
                 this.users = data;
             })
         }
@@ -84,6 +72,9 @@ export default {
 </script>
 
 <style scoped>
+div {
+    background-color: #99aab5;
+}
 .errors {
   list-style: none;
 }

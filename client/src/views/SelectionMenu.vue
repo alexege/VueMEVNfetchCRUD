@@ -4,6 +4,11 @@
 
         <dino-data :selection="selection"/>
 
+        <div v-if="showHiddenComponent" class="selectedDino">
+            <h1>{{ selection }}</h1>
+            <img :src="require(`../assets/dinosaurs/${selection}.png`)" alt="dinosaur" class="dinoListImage">
+        </div>
+
         <div class="dinosaurListItem">
             <a href="#" @click="selectDinoClass(dinosaur)" class="dinoListLink" v-for="dinosaur in dinosaurList" :key="dinosaur._id">
                 <img :src="require(`../assets/dinosaurs/${dinosaur}.png`)" alt="dinosaur" class="dinoListImage">
@@ -26,11 +31,17 @@ export default {
         return {
             selection: "achatina",
             dinosaurList: ["achatina","allosaurus","ammonite","angler","ankylosaurus","araneo","archaeopteryx","argentavis","arthropluera","astrocetus","baryonyx","basilisk","basilosaurus","bloodstalker","brontosaurus","carbonemys","carnotaurus","castoroides","chalicotherium","cnidaria","coelacanth","crystalwyvern","daeodon","dilophosaur","diplocaulus","direbear","featherlight","gacha","gallimimus","gasbags","giantbee","giganotosaurus","gigantopithecus","glowtail","hyaenodon","ichthyosaurus","iguanodon","jerboa","kairuku","kaprosuchus","karkinos","kentrosaurus","lamprey","lystrosaurus","magmasaur","mammoth","managarmr","manta","mantis","megachelon","megalania","megaloceros","megalodon","megalosaurus","meganeura","megapithecus","megatherium","microraptor","morellatops","mosasaurus","oviraptor","pachy","pachyrhinosaurus","parasaur","pegomastax","pelagornis","phiomia","piranha","plesiosaur","pteranodon","purlovia","quetzal","raptor","ravager","reaper","rockdrake","rockelemental","rollrat","sabertooth","sarco","stegosaurus","tapejara","therizinosaurus","thornydragon","thylacoleo","titanoboa","titanomyrma","triceratops","tropeognathus","velonasaur","yutyrannus"],
+            showHiddenComponent: false
         }
     },
     methods: {
         selectDinoClass(dinoClassName) {
+            this.showHiddenComponent = true;
             this.selection = dinoClassName;
+            this.getDinoProperties(dinoClassName);
+        },
+        getDinoProperties(dinoClassName) {
+            return dinoClassName;
         }
     }
 }
@@ -75,5 +86,11 @@ export default {
 .dinoListImage {
     max-width: 100px; 
     max-height: 100px;
+}
+
+.selectedDino {
+    border: 2px solid black;
+    height: 400px;
+    text-align: center;
 }
 </style>

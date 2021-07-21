@@ -7,9 +7,12 @@ const dino_schema = require('../models/dino_schema');
 const JWT_SECRET = 'asdflkjasdflkjasdflkj';
 
 const registerUser = async (req, res) => {
-  // const username = "Alexander";
-  // const plainTextPassword = "password";
   const { username, password: plainTextPassword } = req.body;
+
+  //Check to see that username is unique and not already taken
+  // User.findOne({
+  //   username: req.body.username
+  // })
   
   //Check validity of username
   if(!username || typeof username !== 'string') {
@@ -36,6 +39,8 @@ const registerUser = async (req, res) => {
       password
     })
     console.log('User created successfully', response);
+    return res.json({ status: 'ok' })
+    
   } catch (error) {
     if(error.code === 11000){
       //Duplicate key
@@ -65,10 +70,19 @@ const loginUser = async (req, res) => {
         username: user.username 
       }, JWT_SECRET)
 
+      console.log("The token is: ", token);
+
+      res.cookie('token', token, {
+        httpOnly: true,
+      })
+
       res.cookie('jwt', token, {
         httpOnly: true,
         maxAge: 24 * 60 * 60 * 1000 // 1 day
       })
+      // .json({
+      //   message: "This response has a cookie"
+      // })
 
       return res.json({ status: 'ok', data: token })
 
@@ -79,27 +93,42 @@ const loginUser = async (req, res) => {
 }
 
 const getLoggedInUser = async (req, res) => {
-  try {
-    const cookie = req.cookies['jwt'];
-    const claims = jwt.verify(cookie, JWT_SECRET)
+  console.log("Username: ", req.params.username);
+  User.findOne({ username: req.params.username})
+  .then((data) => {
+    console.log("User was found: ", data);
+    res.status(200).json(data);
+  })
+  .catch((err) => {
+    console.error(err);
+    res.status(500).json(err);
+  });
+  // console.log("JWT_SECRET:", JWT_SECRET);
+  // console.log(req.cookies['jwt']);
+  // try {
+  //   const cookie = req.cookies['jwt'];
+  //   const claims = jwt.verify(cookie, JWT_SECRET)
+  //   console.log("JWT_SECRET:", JWT_SECRET);
   
-    if(!claims) {
-      return res.status(401).send({
-        message: 'unauthenticated'
-      })
-    }
+  //   if(!claims) {
+  //     return res.status(401).send({
+  //       message: 'unauthenticated'
+  //     })
+  //   }
   
-    const user = await User.findOne({ _id: claims._id})
+  // const user = await User.findOne({ _id: claims._id})
   
-    const {password, ...data} = await user.toJSON();
+  // const {password, ...data} = await user.toJSON();
   
-    res.send(data);
-  }
-  catch (e) {
-    return res.status(401).send({
-      message: 'unauthenticated'
-    })
-  }
+  //  res.send(data);
+  // }
+  // catch (e) {
+  //   return res.status(401).send({
+  //     message: 'unauthenticated'
+  //   })
+  // }
+
+
 }
 
 const logout = (req, res) => {
@@ -123,7 +152,7 @@ const createData = (req, res) => {
         console.error(err);
         res.status(500).json(err);
       }
-    });
+    })
 };
 
 const readOneData = (req, res) => {
@@ -137,7 +166,52 @@ const readOneData = (req, res) => {
     });
 };
 
+const getAllUsers = (req, res) => {
+  User.find()
+  .then((data) => {
+    res.status(200).json(data);
+  })
+  .catch((err) => {
+    console.error(err);
+    res.status(500).json(err);
+  });
+};
+
+  // User.find({}, (err, users) => {
+  //   var userMap = {};
+  //   users.forEach(function(user) {
+  //     userMap[user._id] = user;
+  //   });
+  //   res.status(200).json(data);
+  // })
+  // .catch((err) => {
+  //   console.error(err);
+  //   res.status(500).json(err);
+  // });
+
+
+  // .then((data) => {
+  //   res.status(200).json(data);
+  // })
+  // .catch((err) => {
+  //   console.error(err);
+  //   res.status(500).json(err);
+  // });
+// }
+
+// const readAllData = (req, res) => {
+//   User.find()
+//     .then((data) => {
+//       res.status(200).json(data);
+//     })
+//     .catch((err) => {
+//       console.error(err);
+//       res.status(500).json(err);
+//     });
+// };
+
 const readData = (req, res) => {
+  console.log("Reading user data");
   User.find()
     .then((data) => {
       res.status(200).json(data);
@@ -190,9 +264,11 @@ module.exports = {
   loginUser,
   getLoggedInUser,
   logout,
+  getAllUsers,
   registerUser,
   createData,
   readOneData,
+  // readAllData,
   readData,
   updateData,
   deleteData,

@@ -3,6 +3,7 @@ const express = require('express');
 const {
   loginUser,
   getLoggedInUser,
+  getAllUsers,
   logout,
   registerUser,
   createData,
@@ -34,10 +35,11 @@ router
   .delete('/claim/delete/:id',deleteDino)
   .post('/register',registerUser)
   .post('/login',loginUser)
-  .get('/user',getLoggedInUser)
+  .get('/users',getAllUsers)
   .post('/logout',logout)
   .post('/',createData)
   .get('/:id',readOneData)
+  .get('/username/:username',getLoggedInUser)
   .get('/',readData)
   .get('/dinos/all', getAllDinos)
   .put('/:id',updateData)

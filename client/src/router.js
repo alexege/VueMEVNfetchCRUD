@@ -1,5 +1,7 @@
 import Vue from "vue";
 import Router from "vue-router";
+import Dashboard from "./views/Dashboard.vue";
+import Master from "./views/Master.vue";
 import Home from "./views/Home.vue";
 import Login from "./views/Login.vue";
 import Claim from "./views/Claim.vue";
@@ -18,6 +20,16 @@ export default new Router({
       path: "/",
       name: "home",
       component: Home
+    },
+    {
+      path: "/master",
+      name: "master",
+      component: Master
+    },
+    {
+      path: "/dashboard",
+      name: "dashboard",
+      component: Dashboard
     },
     {
       path: "/claim",
